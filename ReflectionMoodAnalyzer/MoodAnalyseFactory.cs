@@ -55,5 +55,21 @@ namespace ReflectionMoodAnalyzer
 
             }
         }
+        public static string InvokeAnalyzeMood(string message, string methodName)
+        {
+            try
+            {
+                Type type = Type.GetType("ReflectionMoodAnalyzer.MoodAnalyzer");
+                object moodAnalyzerObject = MoodAnalyseFactory.CreateMoodAnalyseUsingParameterizedConstructor("ReflectionMoodAnalyzer.MoodAnalyzer", "MoodAnalyzer", message);
+                MethodInfo analyzerMoodInfo = type.GetMethod(methodName);
+                object mood = analyzerMoodInfo.Invoke(moodAnalyzerObject, null);
+                return mood.ToString();
+            }
+            catch (NullReferenceException)
+            {
+                throw new MoodAnalyzerException(MoodAnalyzerException.ExceptionType.NO_SUCH_METHOD, "Method is not found");
+            }
+        }
     }
+    
 }
